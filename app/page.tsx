@@ -17,8 +17,7 @@ const projects = [
     id: "02",
     title: "Landing-Page",
     type: "WEB APPLICATION",
-    description:
-      "A simple Landing page for event",
+    description: "A simple Landing page for event",
     image: "/meet.png",
     tech: "LARAVEL · PHP",
   },
@@ -45,6 +44,7 @@ export default function Home() {
 
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     setVisible(true);
@@ -61,9 +61,11 @@ export default function Home() {
 
     // ================================
     // WEB3FORMS
-    // GANTI DENGAN ACCESS KEY KAMU
     // ================================
-    data.append("access_key", "55d03e46-4513-439b-a8fc-568e725ec25f");
+    data.append(
+      "access_key",
+      "55d03e46-4513-439b-a8fc-568e725ec25f"
+    );
 
     data.append(
       "subject",
@@ -99,9 +101,18 @@ export default function Home() {
         });
 
         form.reset();
+
+        // Tampilkan popup
+        setShowSuccess(true);
+
+        // Popup otomatis hilang setelah 4 detik
+        setTimeout(() => {
+          setShowSuccess(false);
+        }, 4000);
       } else {
         setStatus(
-          result.message || "FAILED TO SEND. PLEASE TRY AGAIN."
+          result.message ||
+            "FAILED TO SEND. PLEASE TRY AGAIN."
         );
       }
     } catch (error) {
@@ -115,6 +126,80 @@ export default function Home() {
   return (
     <main className="overflow-hidden bg-[#f4f3ef] text-[#111]">
 
+      {/* ================= SUCCESS POPUP ================= */}
+
+      <div
+        className={`fixed inset-0 z-[100] flex items-center justify-center px-5 transition-all duration-500 ${
+          showSuccess
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }`}
+      >
+        {/* BACKDROP */}
+
+        <div
+          onClick={() => setShowSuccess(false)}
+          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-500 ${
+            showSuccess ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        {/* POPUP */}
+
+        <div
+          className={`relative z-10 w-full max-w-md bg-[#f4f3ef] p-8 shadow-2xl transition-all duration-500 md:p-10 ${
+            showSuccess
+              ? "translate-y-0 scale-100 opacity-100"
+              : "translate-y-5 scale-95 opacity-0"
+          }`}
+        >
+          {/* TOP */}
+
+          <div className="flex items-start justify-between border-b border-black/10 pb-6">
+            <div>
+              <p className="text-[8px] tracking-[0.2em] text-black/40">
+                PORTFOLIO / CONTACT
+              </p>
+
+              <h3 className="mt-3 text-4xl font-medium tracking-[-0.07em]">
+                MESSAGE SENT.
+              </h3>
+            </div>
+
+            <button
+              onClick={() => setShowSuccess(false)}
+              aria-label="Close popup"
+              className="text-xl text-black/40 transition-opacity hover:text-black hover:opacity-100"
+            >
+              ×
+            </button>
+          </div>
+
+          {/* CONTENT */}
+
+          <div className="py-8">
+            <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#111] text-[#f4f3ef]">
+              ✓
+            </div>
+
+            <p className="max-w-sm text-sm leading-6 text-black/50">
+              Thank you for reaching out. Your message has been
+              successfully sent. I&apos;ll get back to you as soon
+              as possible.
+            </p>
+          </div>
+
+          {/* CLOSE BUTTON */}
+
+          <button
+            onClick={() => setShowSuccess(false)}
+            className="w-full rounded-full bg-[#111] px-7 py-4 text-[9px] tracking-[0.2em] text-[#f4f3ef] transition-all duration-300 hover:px-9"
+          >
+            CLOSE
+          </button>
+        </div>
+      </div>
+
       {/* ================= NAVBAR ================= */}
 
       <nav className="fixed left-0 top-0 z-50 w-full px-5 py-5 text-white mix-blend-difference md:px-8 lg:px-10">
@@ -127,6 +212,8 @@ export default function Home() {
           >
             ARKA®
           </a>
+
+          {/* DESKTOP NAV */}
 
           <div className="hidden items-center gap-10 text-[10px] tracking-[0.2em] md:flex">
 
@@ -153,9 +240,11 @@ export default function Home() {
 
           </div>
 
+          {/* MOBILE BUTTON */}
+
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex flex-col gap-1.5 md:hidden"
+            className="relative z-[60] flex flex-col gap-1.5 md:hidden"
             aria-label="Toggle menu"
           >
             <span className="h-px w-6 bg-white" />
@@ -164,17 +253,17 @@ export default function Home() {
 
         </div>
 
-        {/* MOBILE MENU */}
+        {/* ================= MOBILE MENU ================= */}
 
         <div
-          className={`absolute left-0 top-0 -z-10 w-full bg-[#111] px-5 pt-24 transition-all duration-500 ${
+          className={`fixed inset-0 z-40 bg-[#111] px-5 pt-24 text-white transition-all duration-500 md:hidden ${
             menuOpen
-              ? "h-screen opacity-100"
-              : "pointer-events-none h-0 opacity-0"
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0"
           }`}
         >
 
-          <div className="flex flex-col">
+          <div className="flex h-full flex-col">
 
             {["WORK", "ABOUT", "CONTACT"].map((item) => (
               <a
@@ -187,18 +276,27 @@ export default function Home() {
               </a>
             ))}
 
+            <div className="mt-auto border-t border-white/10 pb-10 pt-6">
+              <p className="text-[8px] tracking-[0.2em] text-white/30">
+                ARKA PUTRA YAZAKA
+              </p>
+
+              <p className="mt-2 text-[8px] tracking-[0.2em] text-white/30">
+                FRONTEND DEVELOPER
+              </p>
+            </div>
+
           </div>
 
         </div>
 
       </nav>
 
-
       {/* ================= HERO ================= */}
 
       <section
         id="home"
-        className="relative min-h-screen px-5 pb-10 pt-28 md:px-8 lg:px-10"
+        className="relative min-h-screen px-5 pb-8 pt-28 md:px-8 md:pb-10 lg:px-10"
       >
 
         <div
@@ -233,7 +331,6 @@ export default function Home() {
 
           </div>
 
-
           {/* MAIN HERO */}
 
           <div className="relative mt-20 md:mt-24">
@@ -251,14 +348,13 @@ export default function Home() {
                 </h1>
 
                 <p className="mb-2 hidden max-w-[200px] text-xs leading-5 text-black/50 lg:block">
-                  Frontend developer focused on creating modern digital
-                  experiences through code and design.
+                  Frontend developer focused on creating modern
+                  digital experiences through code and design.
                 </p>
 
               </div>
 
             </div>
-
 
             {/* FLOATING PORTRAIT */}
 
@@ -284,10 +380,9 @@ export default function Home() {
 
           </div>
 
-
           {/* HERO BOTTOM */}
 
-          <div className="mt-24 flex items-end justify-between border-t border-black/10 pt-5 md:mt-32">
+          <div className="mt-20 flex items-end justify-between border-t border-black/10 pt-5 md:mt-32">
 
             <div>
 
@@ -310,7 +405,6 @@ export default function Home() {
               <span className="transition-transform duration-300 group-hover:translate-y-1">
                 ↓
               </span>
-
             </a>
 
           </div>
@@ -319,17 +413,16 @@ export default function Home() {
 
       </section>
 
-
       {/* ================= ABOUT ================= */}
 
       <section
         id="about"
-        className="px-5 py-32 md:px-8 md:py-48 lg:px-10"
+        className="px-5 py-20 md:px-8 md:py-48 lg:px-10"
       >
 
         <div className="mx-auto max-w-[1700px]">
 
-          <div className="grid gap-16 md:grid-cols-[0.25fr_1fr]">
+          <div className="grid gap-12 md:grid-cols-[0.25fr_1fr] md:gap-16">
 
             <p className="text-[9px] tracking-[0.2em] text-black/40">
               ABOUT ME
@@ -337,7 +430,7 @@ export default function Home() {
 
             <div>
 
-              <p className="max-w-6xl text-[8vw] font-medium leading-[0.92] tracking-[-0.065em] md:text-[6vw] lg:text-[5vw]">
+              <p className="text-[8vw] font-medium leading-[0.92] tracking-[-0.065em] md:text-[6vw] lg:text-[5vw]">
 
                 I&apos;M A DEVELOPER WHO ENJOYS TURNING{" "}
 
@@ -347,13 +440,13 @@ export default function Home() {
 
               </p>
 
-
-              <div className="mt-16 flex flex-col gap-8 md:ml-[25%] md:max-w-lg">
+              <div className="mt-12 flex flex-col gap-8 md:ml-[25%] md:mt-16 md:max-w-lg">
 
                 <p className="text-sm leading-7 text-black/50">
-                  Currently studying Informatics at Universitas Komputer
-                  Indonesia while exploring frontend development, UI design
-                  and modern web technologies.
+                  Currently studying Informatics at Universitas
+                  Komputer Indonesia while exploring frontend
+                  development, UI design and modern web
+                  technologies.
                 </p>
 
                 <a
@@ -372,7 +465,6 @@ export default function Home() {
         </div>
 
       </section>
-
 
       {/* ================= PROJECTS ================= */}
 
@@ -405,7 +497,6 @@ export default function Home() {
 
           </div>
 
-
           {/* PROJECT 01 */}
 
           <div className="group">
@@ -429,7 +520,6 @@ export default function Home() {
 
             </div>
 
-
             <div className="mt-5 flex flex-col justify-between gap-5 md:flex-row">
 
               <div>
@@ -443,7 +533,6 @@ export default function Home() {
                 </h3>
 
               </div>
-
 
               <div className="max-w-sm md:text-right">
 
@@ -461,7 +550,6 @@ export default function Home() {
 
           </div>
 
-
           {/* PROJECTS 02 / 03 */}
 
           <div className="mt-32 grid gap-20 md:grid-cols-2 md:gap-10">
@@ -471,7 +559,9 @@ export default function Home() {
               <div
                 key={project.id}
                 className={`group ${
-                  project.id === "03" ? "md:mt-40" : ""
+                  project.id === "03"
+                    ? "md:mt-40"
+                    : ""
                 }`}
               >
 
@@ -493,7 +583,6 @@ export default function Home() {
                   </div>
 
                 </div>
-
 
                 <div className="mt-5">
 
@@ -532,7 +621,6 @@ export default function Home() {
         </div>
 
       </section>
-
 
       {/* ================= SKILLS ================= */}
 
@@ -575,7 +663,7 @@ export default function Home() {
                   >
 
                     <span className="mr-3 text-[8px] text-white/30">
-                      0{index + 1}
+                      {String(index + 1).padStart(2, "0")}
                     </span>
 
                     {skill}
@@ -593,7 +681,6 @@ export default function Home() {
         </div>
 
       </section>
-
 
       {/* ================= EDUCATION ================= */}
 
@@ -629,8 +716,6 @@ export default function Home() {
 
               </div>
 
-<div>
-
               <div className="grid gap-8 border-t border-black/10 py-8 md:grid-cols-[1fr_auto]">
 
                 <div>
@@ -650,7 +735,6 @@ export default function Home() {
                 </span>
 
               </div>
-
 
               <div className="grid gap-8 border-t border-black/10 py-8 md:grid-cols-[1fr_auto]">
 
@@ -677,10 +761,8 @@ export default function Home() {
           </div>
 
         </div>
-        </div>
 
       </section>
-
 
       {/* ================= CONTACT ================= */}
 
@@ -695,13 +777,11 @@ export default function Home() {
             HAVE A PROJECT?
           </p>
 
-
           <h2 className="text-[17vw] font-medium leading-[0.72] tracking-[-0.09em] md:text-[13vw]">
             LET&apos;S
             <br />
             TALK.
           </h2>
-
 
           <div className="mt-20 grid gap-16 border-t border-white/10 pt-10 lg:grid-cols-[0.35fr_1fr]">
 
@@ -710,10 +790,9 @@ export default function Home() {
             <div>
 
               <p className="max-w-xs text-sm leading-6 text-white/40">
-                Have an idea, project, collaboration or just want to say
-                hello? Send me a message.
+                Have an idea, project, collaboration or just want
+                to say hello? Send me a message.
               </p>
-
 
               <div className="mt-10">
 
@@ -728,7 +807,6 @@ export default function Home() {
               </div>
 
             </div>
-
 
             {/* CONTACT FORM */}
 
@@ -758,7 +836,6 @@ export default function Home() {
 
               </div>
 
-
               {/* EMAIL */}
 
               <div className="border-b border-white/15">
@@ -779,7 +856,6 @@ export default function Home() {
                 />
 
               </div>
-
 
               {/* MESSAGE */}
 
@@ -802,7 +878,6 @@ export default function Home() {
 
               </div>
 
-
               {/* HONEYPOT */}
 
               <input
@@ -812,7 +887,6 @@ export default function Home() {
                 tabIndex={-1}
                 autoComplete="off"
               />
-
 
               {/* SUBMIT */}
 
@@ -828,9 +902,14 @@ export default function Home() {
                     : "SEND MESSAGE ↗"}
                 </button>
 
-
                 {status && (
-                  <p className="text-[9px] tracking-[0.15em] text-white/50">
+                  <p
+                    className={`text-[9px] tracking-[0.15em] ${
+                      status === "MESSAGE SENT."
+                        ? "text-white/50"
+                        : "text-red-400"
+                    }`}
+                  >
                     {status}
                   </p>
                 )}
@@ -844,7 +923,6 @@ export default function Home() {
         </div>
 
       </section>
-
 
       {/* ================= FOOTER ================= */}
 
