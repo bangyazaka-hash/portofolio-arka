@@ -554,7 +554,6 @@ export default function Home() {
                 USE.
               </h2>
 
-
               <div className="mt-20 grid grid-cols-2 border-t border-white/10 md:grid-cols-3">
 
                 {[
@@ -567,6 +566,7 @@ export default function Home() {
                   "MYSQL",
                   "PRISMA",
                   "GITHUB",
+                  "FIGMA",
                 ].map((skill, index) => (
 
                   <div
@@ -618,7 +618,7 @@ export default function Home() {
                   </h3>
 
                   <p className="mt-2 text-sm text-black/40">
-                    Informatics
+                    Informatics Engineering
                   </p>
 
                 </div>
